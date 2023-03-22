@@ -57,7 +57,9 @@ zero_impl!(i32, 0);
 zero_impl!(i64, 0);
 zero_impl!(i128, 0);
 
+#[cfg(feature = "floats")]
 zero_impl!(f32, 0.0);
+#[cfg(feature = "floats")]
 zero_impl!(f64, 0.0);
 
 impl<T: Zero> Zero for Wrapping<T>
@@ -144,7 +146,9 @@ one_impl!(i32, 1);
 one_impl!(i64, 1);
 one_impl!(i128, 1);
 
+#[cfg(feature = "floats")]
 one_impl!(f32, 1.0);
+#[cfg(feature = "floats")]
 one_impl!(f64, 1.0);
 
 impl<T: One> One for Wrapping<T>

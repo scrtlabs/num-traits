@@ -142,6 +142,7 @@ pow_impl!(Wrapping<isize>);
 // pow_impl!(usize, u64);
 // pow_impl!(isize, u64);
 
+#[cfg(feature = "floats")]
 #[cfg(any(feature = "std", feature = "libm"))]
 mod float_impls {
     use super::Pow;

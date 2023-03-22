@@ -1,8 +1,10 @@
 #![cfg(any(feature = "std", feature = "libm"))]
+#![cfg(feature = "floats")]
 
+use crate::Float;
 use core::ops::Neg;
 
-use crate::{Float, Num, NumCast};
+use crate::{Num, NumCast};
 
 // NOTE: These doctests have the same issue as those in src/float.rs.
 // They're testing the inherent methods directly, and not those of `Real`.
@@ -779,6 +781,7 @@ pub trait Real: Num + Copy + NumCast + PartialOrd + Neg<Output = Self> {
     fn atanh(self) -> Self;
 }
 
+#[cfg(feature = "floats")]
 impl<T: Float> Real for T {
     forward! {
         Float::min_value() -> Self;

@@ -1,5 +1,6 @@
 use core::mem::size_of;
 use core::num::Wrapping;
+#[cfg(feature = "floats")]
 use core::{f32, f64};
 use core::{i128, i16, i32, i64, i8, isize};
 use core::{u128, u16, u32, u64, u8, usize};
@@ -101,6 +102,7 @@ pub trait ToPrimitive {
         self.to_u64().map(From::from)
     }
 
+    #[cfg(feature = "floats")]
     /// Converts the value of `self` to an `f32`. Overflows may map to positive
     /// or negative inifinity, otherwise `None` is returned if the value cannot
     /// be represented by an `f32`.
@@ -109,6 +111,7 @@ pub trait ToPrimitive {
         self.to_f64().as_ref().and_then(ToPrimitive::to_f32)
     }
 
+    #[cfg(feature = "floats")]
     /// Converts the value of `self` to an `f64`. Overflows may map to positive
     /// or negative inifinity, otherwise `None` is returned if the value cannot
     /// be represented by an `f64`.
@@ -177,10 +180,12 @@ macro_rules! impl_to_primitive_int {
                 fn to_u128 -> u128;
             }
 
+            #[cfg(feature = "floats")]
             #[inline]
             fn to_f32(&self) -> Option<f32> {
                 Some(*self as f32)
             }
+            #[cfg(feature = "floats")]
             #[inline]
             fn to_f64(&self) -> Option<f64> {
                 Some(*self as f64)
@@ -247,10 +252,12 @@ macro_rules! impl_to_primitive_uint {
                 fn to_u128 -> u128;
             }
 
+            #[cfg(feature = "floats")]
             #[inline]
             fn to_f32(&self) -> Option<f32> {
                 Some(*self as f32)
             }
+            #[cfg(feature = "floats")]
             #[inline]
             fn to_f64(&self) -> Option<f64> {
                 Some(*self as f64)
@@ -323,6 +330,7 @@ macro_rules! impl_to_primitive_float_to_signed_int {
     )*}
 }
 
+#[cfg(feature = "floats")]
 macro_rules! impl_to_primitive_float_to_unsigned_int {
     ($f:ident : $( $(#[$cfg:meta])* fn $method:ident -> $u:ident ; )*) => {$(
         #[inline]
@@ -350,6 +358,7 @@ macro_rules! impl_to_primitive_float_to_unsigned_int {
     )*}
 }
 
+#[cfg(feature = "floats")]
 macro_rules! impl_to_primitive_float {
     ($T:ident) => {
         impl ToPrimitive for $T {
@@ -379,7 +388,9 @@ macro_rules! impl_to_primitive_float {
     };
 }
 
+#[cfg(feature = "floats")]
 impl_to_primitive_float!(f32);
+#[cfg(feature = "floats")]
 impl_to_primitive_float!(f64);
 
 /// A generic trait for converting a number to a value.
@@ -477,6 +488,7 @@ pub trait FromPrimitive: Sized {
         n.to_u64().and_then(FromPrimitive::from_u64)
     }
 
+    #[cfg(feature = "floats")]
     /// Converts a `f32` to return an optional value of this type. If the
     /// value cannot be represented by this type, then `None` is returned.
     #[inline]
@@ -484,6 +496,7 @@ pub trait FromPrimitive: Sized {
         FromPrimitive::from_f64(From::from(n))
     }
 
+    #[cfg(feature = "floats")]
     /// Converts a `f64` to return an optional value of this type. If the
     /// value cannot be represented by this type, then `None` is returned.
     ///
@@ -553,10 +566,12 @@ macro_rules! impl_from_primitive {
                 n.$to_ty()
             }
 
+            #[cfg(feature = "floats")]
             #[inline]
             fn from_f32(n: f32) -> Option<$T> {
                 n.$to_ty()
             }
+            #[cfg(feature = "floats")]
             #[inline]
             fn from_f64(n: f64) -> Option<$T> {
                 n.$to_ty()
@@ -577,7 +592,9 @@ impl_from_primitive!(u16, to_u16);
 impl_from_primitive!(u32, to_u32);
 impl_from_primitive!(u64, to_u64);
 impl_from_primitive!(u128, to_u128);
+#[cfg(feature = "floats")]
 impl_from_primitive!(f32, to_f32);
+#[cfg(feature = "floats")]
 impl_from_primitive!(f64, to_f64);
 
 macro_rules! impl_to_primitive_wrapping {
@@ -606,7 +623,9 @@ impl<T: ToPrimitive> ToPrimitive for Wrapping<T> {
         fn to_u64 -> u64;
         fn to_u128 -> u128;
 
+        #[cfg(feature = "floats")]
         fn to_f32 -> f32;
+        #[cfg(feature = "floats")]
         fn to_f64 -> f64;
     }
 }
@@ -637,7 +656,9 @@ impl<T: FromPrimitive> FromPrimitive for Wrapping<T> {
         fn from_u64(u64);
         fn from_u128(u128);
 
+        #[cfg(feature = "floats")]
         fn from_f32(f32);
+        #[cfg(feature = "floats")]
         fn from_f64(f64);
     }
 }
@@ -700,7 +721,9 @@ impl_num_cast!(i32, to_i32);
 impl_num_cast!(i64, to_i64);
 impl_num_cast!(i128, to_i128);
 impl_num_cast!(isize, to_isize);
+#[cfg(feature = "floats")]
 impl_num_cast!(f32, to_f32);
+#[cfg(feature = "floats")]
 impl_num_cast!(f64, to_f64);
 
 impl<T: NumCast> NumCast for Wrapping<T> {
@@ -760,19 +783,33 @@ macro_rules! impl_as_primitive {
     };
 }
 
+#[cfg(feature = "floats")]
 impl_as_primitive!(u8 => { char, f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(i8 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(u16 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(i16 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(u32 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(i32 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(u64 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(i64 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(u128 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(i128 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(usize => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(isize => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(f32 => { f32, f64 });
+#[cfg(feature = "floats")]
 impl_as_primitive!(f64 => { f32, f64 });
 impl_as_primitive!(char => { char });
 impl_as_primitive!(bool => {});

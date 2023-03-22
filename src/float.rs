@@ -1,3 +1,5 @@
+#![cfg(feature = "floats")]
+
 use core::num::FpCategory;
 use core::ops::{Add, Div, Neg};
 

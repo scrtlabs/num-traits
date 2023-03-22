@@ -1,6 +1,7 @@
 use core::num::Wrapping;
 use core::ops::Neg;
 
+#[cfg(feature = "floats")]
 use crate::float::FloatCore;
 use crate::Num;
 
@@ -104,6 +105,7 @@ where
     }
 }
 
+#[cfg(feature = "floats")]
 macro_rules! signed_float_impl {
     ($t:ty) => {
         impl Signed for $t {
@@ -150,7 +152,9 @@ macro_rules! signed_float_impl {
     };
 }
 
+#[cfg(feature = "floats")]
 signed_float_impl!(f32);
+#[cfg(feature = "floats")]
 signed_float_impl!(f64);
 
 /// Computes the absolute value.

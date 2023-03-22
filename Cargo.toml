@@ -24,7 +24,7 @@ libm = { version = "0.2.0", optional = true }
 [features]
 default = ["std"]
 std = []
-
+floats = []
 # vestigial features, now always in effect
 i128 = []
 

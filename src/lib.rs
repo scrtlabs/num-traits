@@ -29,7 +29,9 @@ use core::ops::{AddAssign, DivAssign, MulAssign, RemAssign, SubAssign};
 
 pub use crate::bounds::Bounded;
 #[cfg(any(feature = "std", feature = "libm"))]
+#[cfg(feature = "floats")]
 pub use crate::float::Float;
+#[cfg(feature = "floats")]
 pub use crate::float::FloatConst;
 // pub use real::{FloatCore, Real}; // NOTE: Don't do this, it breaks `use num_traits::*;`.
 pub use crate::cast::{cast, AsPrimitive, FromPrimitive, NumCast, ToPrimitive};
@@ -53,11 +55,13 @@ mod macros;
 
 pub mod bounds;
 pub mod cast;
+#[cfg(feature = "floats")]
 pub mod float;
 pub mod identities;
 pub mod int;
 pub mod ops;
 pub mod pow;
+#[cfg(feature = "floats")]
 pub mod real;
 pub mod sign;
 
@@ -214,6 +218,7 @@ fn str_to_ascii_lower_eq_str(a: &str, b: &str) -> bool {
         })
 }
 
+#[cfg(feature = "floats")]
 // FIXME: The standard library from_str_radix on floats was deprecated, so we're stuck
 // with this implementation ourselves until we want to make a breaking change.
 // (would have to drop it from `Num` though)
@@ -388,6 +393,7 @@ macro_rules! float_trait_impl {
         }
     )*)
 }
+#[cfg(feature = "floats")]
 float_trait_impl!(Num for f32 f64);
 
 /// A value bounded by a minimum and a maximum
@@ -456,22 +462,26 @@ fn clamp_test() {
     assert_eq!(-1, clamp_max(1, -1));
     assert_eq!(-2, clamp_max(-2, -1));
 
+    #[cfg(feature = "floats")]
     // Float test
-    assert_eq!(1.0, clamp(1.0, -1.0, 2.0));
-    assert_eq!(-1.0, clamp(-2.0, -1.0, 2.0));
-    assert_eq!(2.0, clamp(3.0, -1.0, 2.0));
-    assert_eq!(1.0, clamp_min(1.0, -1.0));
-    assert_eq!(-1.0, clamp_min(-2.0, -1.0));
-    assert_eq!(-1.0, clamp_max(1.0, -1.0));
-    assert_eq!(-2.0, clamp_max(-2.0, -1.0));
-    assert!(clamp(::core::f32::NAN, -1.0, 1.0).is_nan());
-    assert!(clamp_min(::core::f32::NAN, 1.0).is_nan());
-    assert!(clamp_max(::core::f32::NAN, 1.0).is_nan());
+    {
+        assert_eq!(1.0, clamp(1.0, -1.0, 2.0));
+        assert_eq!(-1.0, clamp(-2.0, -1.0, 2.0));
+        assert_eq!(2.0, clamp(3.0, -1.0, 2.0));
+        assert_eq!(1.0, clamp_min(1.0, -1.0));
+        assert_eq!(-1.0, clamp_min(-2.0, -1.0));
+        assert_eq!(-1.0, clamp_max(1.0, -1.0));
+        assert_eq!(-2.0, clamp_max(-2.0, -1.0));
+        assert!(clamp(::core::f32::NAN, -1.0, 1.0).is_nan());
+        assert!(clamp_min(::core::f32::NAN, 1.0).is_nan());
+        assert!(clamp_max(::core::f32::NAN, 1.0).is_nan());
+    }
 }
 
 #[test]
 #[should_panic]
 #[cfg(debug_assertions)]
+#[cfg(feature = "floats")]
 fn clamp_nan_min() {
     clamp(0., ::core::f32::NAN, 1.);
 }
@@ -479,6 +489,7 @@ fn clamp_nan_min() {
 #[test]
 #[should_panic]
 #[cfg(debug_assertions)]
+#[cfg(feature = "floats")]
 fn clamp_nan_max() {
     clamp(0., -1., ::core::f32::NAN);
 }
@@ -486,6 +497,7 @@ fn clamp_nan_max() {
 #[test]
 #[should_panic]
 #[cfg(debug_assertions)]
+#[cfg(feature = "floats")]
 fn clamp_nan_min_max() {
     clamp(0., ::core::f32::NAN, ::core::f32::NAN);
 }
@@ -493,6 +505,7 @@ fn clamp_nan_min_max() {
 #[test]
 #[should_panic]
 #[cfg(debug_assertions)]
+#[cfg(feature = "floats")]
 fn clamp_min_nan_min() {
     clamp_min(0., ::core::f32::NAN);
 }
@@ -500,11 +513,13 @@ fn clamp_min_nan_min() {
 #[test]
 #[should_panic]
 #[cfg(debug_assertions)]
+#[cfg(feature = "floats")]
 fn clamp_max_nan_max() {
     clamp_max(0., ::core::f32::NAN);
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn from_str_radix_unwrap() {
     // The Result error must impl Debug to allow unwrap()
 
@@ -516,6 +531,7 @@ fn from_str_radix_unwrap() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn from_str_radix_multi_byte_fail() {
     // Ensure parsing doesn't panic, even on invalid sign characters
     assert!(f32::from_str_radix("™0.2", 10).is_err());
@@ -525,6 +541,7 @@ fn from_str_radix_multi_byte_fail() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn from_str_radix_ignore_case() {
     assert_eq!(
         f32::from_str_radix("InF", 16).unwrap(),

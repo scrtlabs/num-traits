@@ -1,4 +1,5 @@
 use core::num::Wrapping;
+#[cfg(feature = "floats")]
 use core::{f32, f64};
 use core::{i128, i16, i32, i64, i8, isize};
 use core::{u128, u16, u32, u64, u8, usize};
@@ -77,6 +78,7 @@ impl<T: Bounded> Bounded for Wrapping<T> {
     }
 }
 
+#[cfg(feature = "floats")]
 bounded_impl!(f32, f32::MIN, f32::MAX);
 
 macro_rules! for_each_tuple_ {
@@ -110,6 +112,7 @@ macro_rules! bounded_tuple {
 }
 
 for_each_tuple!(bounded_tuple);
+#[cfg(feature = "floats")]
 bounded_impl!(f64, f64::MIN, f64::MAX);
 
 #[test]

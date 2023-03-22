@@ -34,6 +34,7 @@ pub trait MulAddAssign<A = Self, B = Self> {
     fn mul_add_assign(&mut self, a: A, b: B);
 }
 
+#[cfg(feature = "floats")]
 #[cfg(any(feature = "std", feature = "libm"))]
 impl MulAdd<f32, f32> for f32 {
     type Output = Self;
@@ -44,6 +45,7 @@ impl MulAdd<f32, f32> for f32 {
     }
 }
 
+#[cfg(feature = "floats")]
 #[cfg(any(feature = "std", feature = "libm"))]
 impl MulAdd<f64, f64> for f64 {
     type Output = Self;
@@ -70,6 +72,7 @@ macro_rules! mul_add_impl {
 mul_add_impl!(MulAdd for isize i8 i16 i32 i64 i128);
 mul_add_impl!(MulAdd for usize u8 u16 u32 u64 u128);
 
+#[cfg(feature = "floats")]
 #[cfg(any(feature = "std", feature = "libm"))]
 impl MulAddAssign<f32, f32> for f32 {
     #[inline]
@@ -78,6 +81,7 @@ impl MulAddAssign<f32, f32> for f32 {
     }
 }
 
+#[cfg(feature = "floats")]
 #[cfg(any(feature = "std", feature = "libm"))]
 impl MulAddAssign<f64, f64> for f64 {
     #[inline]
@@ -124,6 +128,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "floats")]
     #[cfg(feature = "std")]
     fn mul_add_float() {
         macro_rules! test_mul_add {
