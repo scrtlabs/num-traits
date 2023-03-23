@@ -5,6 +5,7 @@
 use num_traits::cast::*;
 use num_traits::Bounded;
 
+#[cfg(feature = "floats")]
 use core::{f32, f64};
 use core::{i128, i16, i32, i64, i8, isize};
 use core::{u128, u16, u32, u64, u8, usize};
@@ -14,6 +15,7 @@ use core::mem;
 use core::num::Wrapping;
 
 #[test]
+#[cfg(feature = "floats")]
 fn to_primitive_float() {
     let f32_toolarge = 1e39f64;
     assert_eq!(f32_toolarge.to_f32(), Some(f32::INFINITY));
@@ -42,7 +44,9 @@ fn wrapping_to_primitive() {
                 assert_eq!(i.to_i32(),   w.to_i32());
                 assert_eq!(i.to_i64(),   w.to_i64());
                 assert_eq!(i.to_isize(), w.to_isize());
+                #[cfg(feature = "floats")]
                 assert_eq!(i.to_f32(),   w.to_f32());
+                #[cfg(feature = "floats")]
                 assert_eq!(i.to_f64(),   w.to_f64());
             })+
         };
@@ -70,6 +74,7 @@ fn wrapping_is_numcast() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn as_primitive() {
     let x: f32 = (1.625f64).as_();
     assert_eq!(x, 1.625f32);
@@ -82,6 +87,7 @@ fn as_primitive() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn float_to_integer_checks_overflow() {
     // This will overflow an i32
     let source: f64 = 1.0e+123f64;
@@ -91,6 +97,7 @@ fn float_to_integer_checks_overflow() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn cast_to_int_checks_overflow() {
     let big_f: f64 = 1.0e123;
     let normal_f: f64 = 1.0;
@@ -115,6 +122,7 @@ fn cast_to_int_checks_overflow() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn cast_to_unsigned_int_checks_overflow() {
     let big_f: f64 = 1.0e123;
     let normal_f: f64 = 1.0;
@@ -139,6 +147,7 @@ fn cast_to_unsigned_int_checks_overflow() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn cast_to_i128_checks_overflow() {
     let big_f: f64 = 1.0e123;
     let normal_f: f64 = 1.0;
@@ -164,6 +173,7 @@ fn dbg(_: ::core::fmt::Arguments) {}
 // Rust 1.8 doesn't handle cfg on macros correctly
 macro_rules! dbg { ($($tok:tt)*) => { dbg(format_args!($($tok)*)) } }
 
+#[cfg(feature = "floats")]
 macro_rules! float_test_edge {
     ($f:ident -> $($t:ident)+) => { $({
         dbg!("testing cast edge cases for {} -> {}", stringify!($f), stringify!($t));
@@ -205,6 +215,7 @@ trait RawOffset: Sized {
     fn raw_dec(self) -> Self;
 }
 
+#[cfg(feature = "floats")]
 impl RawOffset for f32 {
     fn raw_inc(self) -> Self {
         Self::from_bits(self.to_bits() + 1)
@@ -215,6 +226,7 @@ impl RawOffset for f32 {
     }
 }
 
+#[cfg(feature = "floats")]
 impl RawOffset for f64 {
     fn raw_inc(self) -> Self {
         Self::from_bits(self.to_bits() + 1)
@@ -226,6 +238,7 @@ impl RawOffset for f64 {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn cast_float_to_int_edge_cases() {
     float_test_edge!(f32 -> isize i8 i16 i32 i64);
     float_test_edge!(f32 -> usize u8 u16 u32 u64);
@@ -234,6 +247,7 @@ fn cast_float_to_int_edge_cases() {
 }
 
 #[test]
+#[cfg(feature = "floats")]
 fn cast_float_to_i128_edge_cases() {
     float_test_edge!(f32 -> i128 u128);
     float_test_edge!(f64 -> i128 u128);
@@ -337,6 +351,7 @@ fn newtype_from_primitive() {
     fn check<T: PartialEq + Debug + FromPrimitive>() {
         assert_eq_from!(from_i8 from_i16 from_i32 from_i64 from_isize);
         assert_eq_from!(from_u8 from_u16 from_u32 from_u64 from_usize);
+        #[cfg(feature = "floats")]
         assert_eq_from!(from_f32 from_f64);
     }
 
@@ -375,6 +390,7 @@ fn newtype_to_primitive() {
     fn check<T: PartialEq + Debug + Bounded + ToPrimitive>() {
         assert_eq_to!(to_i8 to_i16 to_i32 to_i64 to_isize);
         assert_eq_to!(to_u8 to_u16 to_u32 to_u64 to_usize);
+        #[cfg(feature = "floats")]
         assert_eq_to!(to_f32 to_f64);
     }
 

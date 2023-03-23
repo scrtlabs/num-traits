@@ -180,13 +180,13 @@ macro_rules! impl_to_primitive_int {
                 fn to_u128 -> u128;
             }
 
-            #[cfg(feature = "floats")]
             #[inline]
+            #[cfg(feature = "floats")]
             fn to_f32(&self) -> Option<f32> {
                 Some(*self as f32)
             }
-            #[cfg(feature = "floats")]
             #[inline]
+            #[cfg(feature = "floats")]
             fn to_f64(&self) -> Option<f64> {
                 Some(*self as f64)
             }
@@ -273,6 +273,7 @@ impl_to_primitive_uint!(u32);
 impl_to_primitive_uint!(u64);
 impl_to_primitive_uint!(u128);
 
+#[cfg(feature = "floats")]
 macro_rules! impl_to_primitive_float_to_float {
     ($SrcT:ident : $( fn $method:ident -> $DstT:ident ; )*) => {$(
         #[inline]
@@ -284,6 +285,7 @@ macro_rules! impl_to_primitive_float_to_float {
     )*}
 }
 
+#[cfg(feature = "floats")]
 #[cfg(has_to_int_unchecked)]
 macro_rules! float_to_int_unchecked {
     // SAFETY: Must not be NaN or infinite; must be representable as the integer after truncating.
@@ -300,6 +302,7 @@ macro_rules! float_to_int_unchecked {
     };
 }
 
+#[cfg(feature = "floats")]
 macro_rules! impl_to_primitive_float_to_signed_int {
     ($f:ident : $( $(#[$cfg:meta])* fn $method:ident -> $i:ident ; )*) => {$(
         #[inline]

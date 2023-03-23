@@ -41,6 +41,7 @@ pub use crate::ops::checked::{
     CheckedAdd, CheckedDiv, CheckedMul, CheckedNeg, CheckedRem, CheckedShl, CheckedShr, CheckedSub,
 };
 pub use crate::ops::euclid::{CheckedEuclid, Euclid};
+#[cfg(feature = "floats")]
 pub use crate::ops::inv::Inv;
 pub use crate::ops::mul_add::{MulAdd, MulAddAssign};
 pub use crate::ops::saturating::{Saturating, SaturatingAdd, SaturatingMul, SaturatingSub};

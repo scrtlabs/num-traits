@@ -1,3 +1,4 @@
+#![cfg(feature = "floats")]
 /// Unary operator for retrieving the multiplicative inverse, or reciprocal, of a value.
 pub trait Inv {
     /// The result after applying the operator.

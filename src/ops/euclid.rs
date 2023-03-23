@@ -120,9 +120,11 @@ euclid_int_impl!(isize i8 i16 i32 i64 i128);
 euclid_uint_impl!(usize u8 u16 u32 u64 u128);
 
 #[cfg(all(has_div_euclid, feature = "std"))]
+#[cfg(feature = "floats")]
 euclid_forward_impl!(f32 f64);
 
 #[cfg(not(all(has_div_euclid, feature = "std")))]
+#[cfg(feature = "floats")]
 impl Euclid for f32 {
     #[inline]
     fn div_euclid(&self, v: &f32) -> f32 {
@@ -144,6 +146,7 @@ impl Euclid for f32 {
     }
 }
 
+#[cfg(feature = "floats")]
 #[cfg(not(all(has_div_euclid, feature = "std")))]
 impl Euclid for f64 {
     #[inline]
@@ -296,6 +299,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "floats")]
     fn euclid_float() {
         macro_rules! test_euclid {
             ($($t:ident)+) => {
