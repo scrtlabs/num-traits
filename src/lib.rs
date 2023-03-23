@@ -76,6 +76,7 @@ pub mod float {
     pub use num_traits::float::{Float, FloatConst};
 }
 
+#[cfg(feature = "floats")]
 pub mod real {
     pub use num_traits::real::Real;
 }

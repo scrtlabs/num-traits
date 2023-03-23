@@ -15,7 +15,8 @@ readme = "README.md"
 doctest = false # multiple rlib candidates for `num_traits` found
 
 [dependencies.num-traits]
-version = "0.2.0"
+git = "https://github.com/scrtlabs/num-traits"
+rev = "1c3d9893d2f9dcdf872626d4e723dc88bdc03575"
 
 [features]
 floats = []
