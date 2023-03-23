@@ -16,7 +16,7 @@ doctest = false # multiple rlib candidates for `num_traits` found
 
 [dependencies.num-traits]
 git = "https://github.com/scrtlabs/num-traits"
-rev = "1c3d9893d2f9dcdf872626d4e723dc88bdc03575"
+rev = "41a7b37b3a9bb62f1586406075da6c6e71d3b163"
 
 [features]
 floats = []
